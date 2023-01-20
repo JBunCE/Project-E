@@ -8,13 +8,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ecomerce.projecte.controllers.dtos.request.CreatePromotionRequest;
 import com.ecomerce.projecte.controllers.dtos.request.UpdatePromotionRequest;
 import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
 import com.ecomerce.projecte.services.interfaces.IPromotionService;
 
+@RestController
+@RequestMapping("promotion")
 public class PromotionController {
+    
     @Autowired
     private IPromotionService service;
 

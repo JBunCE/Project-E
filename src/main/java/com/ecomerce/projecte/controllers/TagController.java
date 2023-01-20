@@ -19,6 +19,7 @@ import com.ecomerce.projecte.services.interfaces.ITagService;
 @RestController
 @RequestMapping("tag")
 public class TagController {
+    
     @Autowired
     private ITagService service;
 

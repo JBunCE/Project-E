@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.ecomerce.projecte.controllers.dtos.request.CreatePromotionRequest;
 import com.ecomerce.projecte.controllers.dtos.request.UpdatePromotionRequest;
@@ -14,6 +15,7 @@ import com.ecomerce.projecte.entities.Promotion;
 import com.ecomerce.projecte.repositories.IPromotionRepository;
 import com.ecomerce.projecte.services.interfaces.IPromotionService;
 
+@Service
 public class PromotionServiceImpl implements IPromotionService {
 
     @Autowired
@@ -96,6 +98,7 @@ public class PromotionServiceImpl implements IPromotionService {
 
     private GetPromotionResponse from(Promotion promotion){
         GetPromotionResponse response= new GetPromotionResponse();
+        response.setId(promotion.getId());
         response.setTitle(promotion.getTitle());
         response.setPrice(promotion.getPrice());
         response.setDescription(promotion.getDescription());
