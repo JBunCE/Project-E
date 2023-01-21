@@ -45,4 +45,9 @@ public class UserController {
         service.delete(idUser);
     }
 
+    @GetMapping("health")
+    public String health() {
+        return "Ok";
+    }
+
 }
