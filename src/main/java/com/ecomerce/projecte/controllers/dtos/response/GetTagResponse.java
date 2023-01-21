@@ -1,5 +1,6 @@
 package com.ecomerce.projecte.controllers.dtos.response;
 
+import com.ecomerce.projecte.entities.enums.ColorType;
 import lombok.Getter;
 import lombok.Setter;
 

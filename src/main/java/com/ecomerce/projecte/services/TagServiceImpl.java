@@ -3,6 +3,8 @@ package com.ecomerce.projecte.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ecomerce.projecte.entities.enums.ColorType;
+import com.ecomerce.projecte.entities.enums.converter.ColorTypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class TagServiceImpl implements ITagService{
 
     @Autowired
     private ITagRepository repository;
+
+    @Autowired
+    private ColorTypeConverter converter;
 
     @Override
     public BaseResponse create(CreateTagRequest request) {
@@ -54,9 +59,10 @@ public class TagServiceImpl implements ITagService{
     }
 
     private Tag update(Tag tag, UpdateTagRequest request){
+        ColorType color = converter.convertToEntityAttribute(request.getColor());
         tag.setName(request.getName());
         tag.setDescription(request.getDescription());
-        tag.setColor(request.getColor());
+        tag.setColor(color);
         tag.setIconUrl(request.getIconUrl());
         return repository.save(tag);
     }
@@ -103,16 +109,17 @@ public class TagServiceImpl implements ITagService{
         response.setName(tag.getName());
         response.setDescription(tag.getDescription());
         response.setIconUrl(tag.getIconUrl());
-        response.setColor(tag.getColor());
+        response.setColor(tag.getColor().getColorCode());
         return response;
     }
 
     private Tag from(CreateTagRequest request){
+        ColorType color = converter.convertToEntityAttribute(request.getColor());
         Tag tag=new Tag();
         tag.setName(request.getName());
         tag.setIconUrl(request.getIconUrl());
         tag.setDescription(request.getDescription());
-        tag.setColor(request.getColor());
+        tag.setColor(color);
         return repository.save(tag);
     }
     

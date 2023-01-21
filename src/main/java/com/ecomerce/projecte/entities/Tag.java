@@ -1,5 +1,6 @@
 package com.ecomerce.projecte.entities;
 
+import com.ecomerce.projecte.entities.enums.ColorType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,6 @@ public class Tag {
     private String iconUrl;
     
     @Column(nullable = false)
-    private String color;
+    private ColorType color;
 
 }
