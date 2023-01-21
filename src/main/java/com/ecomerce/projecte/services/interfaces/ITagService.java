@@ -1,0 +1,21 @@
+package com.ecomerce.projecte.services.interfaces;
+
+
+import com.ecomerce.projecte.controllers.dtos.request.CreateTagRequest;
+import com.ecomerce.projecte.controllers.dtos.request.UpdateTagRequest;
+import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
+import com.ecomerce.projecte.entities.Tag;
+
+public interface ITagService {
+    BaseResponse create(CreateTagRequest request);
+
+    BaseResponse update(Long id, UpdateTagRequest request);
+
+    void delete(Long id);
+
+    BaseResponse list();
+
+    BaseResponse get(Long id);
+
+    Tag findById(Long id);
+}
