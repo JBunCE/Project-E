@@ -27,7 +27,7 @@ public class UserController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @PostMapping
+    @PostMapping("/reg")
     public ResponseEntity<BaseResponse> create(@RequestBody CreateUserRequest request){
         BaseResponse response = service.create(request);
         return new ResponseEntity<>(response, response.getHttpStatus());

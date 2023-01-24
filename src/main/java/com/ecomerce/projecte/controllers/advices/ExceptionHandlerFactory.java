@@ -1,5 +1,6 @@
 package com.ecomerce.projecte.controllers.advices;
 
+import com.ecomerce.projecte.controllers.advices.exceptions.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,15 @@ public class ExceptionHandlerFactory {
                 .success(false)
                 .httpStatus(HttpStatus.CONFLICT)
                 .build();
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    private ResponseEntity<BaseResponse> handleNotFoundException(NotFoundException exception){
+        BaseResponse errorResponse = BaseResponse.builder()
+                .message(exception.getLocalizedMessage())
+                .success(false)
+                .httpStatus(HttpStatus.NOT_FOUND).build();
         return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
 
