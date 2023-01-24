@@ -31,6 +31,8 @@ public class WebSecurityConfig {
     @Autowired
     private JWTAuthorizationFilter jwtAuthorizationFilter;
 
+    private final String[] AUTHORIZED_REQUEST = {"/user/reg", "/service/*"};
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -56,7 +58,7 @@ public class WebSecurityConfig {
         return http.cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/user/reg")
+                .requestMatchers(AUTHORIZED_REQUEST)
                 .permitAll()
                 .anyRequest()
                 .authenticated()
