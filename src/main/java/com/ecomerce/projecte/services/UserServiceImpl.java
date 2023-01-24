@@ -1,5 +1,6 @@
 package com.ecomerce.projecte.services;
 
+import com.ecomerce.projecte.controllers.advices.exceptions.NotFoundException;
 import com.ecomerce.projecte.controllers.dtos.request.CreateUserRequest;
 import com.ecomerce.projecte.controllers.dtos.request.UpdateUserRequest;
 import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
@@ -24,7 +25,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public BaseResponse get(Long idUser){
         User user = repository.findById(idUser)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NotFoundException::new);
         return BaseResponse.builder()
                 .data(from(user))
                 .message("user for: " + idUser)
@@ -64,6 +65,11 @@ public class UserServiceImpl implements IUserService {
                 .message("user updated")
                 .success(true)
                 .httpStatus(HttpStatus.ACCEPTED).build();
+    }
+
+    @Override
+    public User getUser(String email) {
+        return repository.findByEmail(email).orElseThrow(RuntimeException::new);
     }
 
     @Override

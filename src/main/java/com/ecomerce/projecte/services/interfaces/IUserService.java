@@ -4,6 +4,7 @@ import com.ecomerce.projecte.controllers.dtos.request.CreateUserRequest;
 import com.ecomerce.projecte.controllers.dtos.request.UpdateUserRequest;
 import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
 import com.ecomerce.projecte.controllers.dtos.response.GetUserResponse;
+import com.ecomerce.projecte.entities.User;
 
 import java.util.List;
 
@@ -12,5 +13,6 @@ public interface IUserService {
     BaseResponse getAll();
     BaseResponse create(CreateUserRequest request);
     BaseResponse update(UpdateUserRequest request, Long idUer);
+    User getUser(String email);
     void delete(Long id);
 }
