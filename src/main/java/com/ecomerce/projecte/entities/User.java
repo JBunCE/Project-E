@@ -15,7 +15,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String name;    
 
     private String lastName;
 
@@ -30,5 +30,11 @@ public class User {
 
     @Column(nullable = false)
     private String profilePicture;
+
+    @OneToOne
+    private Provider provider;
+
+
+
 
 }

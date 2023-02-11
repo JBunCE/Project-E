@@ -1,4 +1,4 @@
-package com.ecomerce.projecte.entities.enums.converters;
+package com.ecomerce.projecte.entities.enums.converter;
 
 import com.ecomerce.projecte.entities.enums.UserType;
 import jakarta.persistence.AttributeConverter;

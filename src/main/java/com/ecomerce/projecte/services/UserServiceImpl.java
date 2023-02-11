@@ -104,4 +104,10 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
 
+    @Override
+    public User getUser(Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("The user does not exist"));
+    }
+
 }
