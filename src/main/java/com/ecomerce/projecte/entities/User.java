@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private String profilePicture;
 
-    @OneToOne
+    @OneToOne(mappedBy = "user")
     private Provider provider;
 
 

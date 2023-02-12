@@ -26,7 +26,7 @@ public class Provider {
     @Column(nullable = false)
     private TierType tier;
 
-    @OneToOne(mappedBy = "provider")
+    @OneToOne
     private User user;
 
 }
