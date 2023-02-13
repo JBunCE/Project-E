@@ -4,9 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Builder @Getter
-public class GetProviderResponse {
+public class GetConnectionResponse {
     private Long id;
-    private Long numberPhone;
-    private String tier;
-    private GetUserResponse user;
+    private String name;
+    private String urlConnection;
+    private GetProviderResponse provider;
 }

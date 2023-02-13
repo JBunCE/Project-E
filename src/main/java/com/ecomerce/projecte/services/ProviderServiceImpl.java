@@ -106,6 +106,7 @@ return BaseResponse.builder()
 
     private GetProviderResponse from(Provider provider){
         return GetProviderResponse.builder()
+            .id(provider.getId())
             .numberPhone(provider.getPhoneNumber())
             .tier(provider.getTier().getTierCode())
             .user(from(provider.getUser())).build();
@@ -118,6 +119,11 @@ return BaseResponse.builder()
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .profilePicture(user.getProfilePicture()).build();
+    }
+
+    public Provider findById(Long id){
+        return repository.findById(id)
+        .orElseThrow(() -> new RuntimeException("The provider does not exist"));
     }
     
 }
