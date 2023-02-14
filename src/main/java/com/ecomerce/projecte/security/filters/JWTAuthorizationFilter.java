@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,12 +17,17 @@ import java.io.IOException;
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    @Autowired private TokenUtils tokenUtils;
+    private final TokenUtils tokenUtils;
+
+    @Autowired
+    public JWTAuthorizationFilter(TokenUtils tokenUtils){
+        this.tokenUtils = tokenUtils;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    @NotNull HttpServletResponse response,
+                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String bearerToken = request.getHeader("Authorization");
 
