@@ -9,10 +9,14 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.ecomerce.projecte.controllers.dtos.request.UpdateUserRequest;
+import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
+import com.ecomerce.projecte.entities.User;
+import com.ecomerce.projecte.entities.enums.converters.UserTypeConverter;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,12 +42,14 @@ public class AWSComponent {
     @Value(value = "${AWS_BUCKET.ACCESS_KEY}")
     private String accessKey;
 
-    private final ResourceLoader resourceLoader;
+    private final UserServiceImpl userService;
+    private final UserTypeConverter userTypeConverter;
 
     @Autowired
-    public AWSComponent(ResourceLoader resourceLoader){
-
-        this.resourceLoader = resourceLoader;
+    public AWSComponent(UserServiceImpl userService,
+                        UserTypeConverter userTypeConverter){
+        this.userService = userService;
+        this.userTypeConverter = userTypeConverter;
     }
 
     @PostConstruct
@@ -77,23 +83,42 @@ public class AWSComponent {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
-    public String uploadFile(MultipartFile multipartFile) {
-        String fileUrl = "";
+    public BaseResponse uploadProfilePicture(MultipartFile multipartFile, Long idUser) {
+        User user = userService.getUser(idUser);
+        String awsPath = "persons/users/" + user.getEmail() + "/profile_picture/";
+        String fileUrl;
+
         try{
             File file = convertMultipartToFile(multipartFile);
-            String fileName = generateFileName(multipartFile);
-            fileUrl = "https://" + bucketName + "." + endpointUrl + "/" + fileName;
-            uploadFileTos3Bucket(fileName, file);
+            String finalPath = awsPath + generateFileName(multipartFile);
+            fileUrl = "https://" + bucketName + "." + endpointUrl + "/" + finalPath;
+            uploadFileTos3Bucket(finalPath, file);
+            user.setProfilePicture(fileUrl);
+            userService.update(from(user), user.getId());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return fileUrl;
+        return BaseResponse.builder()
+                .data(fileUrl)
+                .message("The profile picture was uploaded")
+                .httpStatus(HttpStatus.CREATED)
+                .success(true).build();
     }
 
     public String deleteFileFromS3Bucket(String fileUrl) {
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
         s3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
         return "SUCCESS";
+    }
+
+    private UpdateUserRequest from(User user){
+        return UpdateUserRequest.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .lastName(user.getLastName())
+                .profilePicture(user.getProfilePicture())
+                .userType(userTypeConverter.convertToDatabaseColumn(user.getUserType()))
+                .build();
     }
 
 }

@@ -7,6 +7,7 @@ import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
 import com.ecomerce.projecte.controllers.dtos.response.GetUserResponse;
 import com.ecomerce.projecte.entities.User;
 import com.ecomerce.projecte.entities.enums.UserType;
+import com.ecomerce.projecte.entities.enums.converters.UserTypeConverter;
 import com.ecomerce.projecte.repositories.IUserRepository;
 import com.ecomerce.projecte.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,15 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements IUserService {
 
+    private final IUserRepository repository;
+    private final UserTypeConverter userTypeConverter;
+
     @Autowired
-    private IUserRepository repository;
+    public UserServiceImpl(IUserRepository repository, UserTypeConverter userTypeConverter) {
+        this.repository = repository;
+        this.userTypeConverter = userTypeConverter;
+    }
+
 
     @Override
     public BaseResponse get(Long idUser){
@@ -73,6 +81,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public User getUser(Long id) {
+        return repository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    @Override
     public void delete(Long id) {
         repository.deleteById(id);
     }
@@ -101,6 +114,8 @@ public class UserServiceImpl implements IUserService {
         user.setName(update.getName());
         user.setLastName(update.getLastName());
         user.setEmail(update.getEmail());
+        user.setProfilePicture(update.getProfilePicture());
+        user.setUserType(userTypeConverter.convertToEntityAttribute(update.getUserType()));
         return user;
     }
 
