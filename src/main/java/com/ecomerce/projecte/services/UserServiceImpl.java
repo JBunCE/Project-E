@@ -16,19 +16,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
     private final IUserRepository repository;
-    private final UserTypeConverter userTypeConverter;
+    private final UserTypeConverter typeConverter;
 
     @Autowired
-    public UserServiceImpl(IUserRepository repository, UserTypeConverter userTypeConverter) {
+    public UserServiceImpl(IUserRepository repository,
+                           UserTypeConverter typeConverter) {
         this.repository = repository;
-        this.userTypeConverter = userTypeConverter;
+        this.typeConverter = typeConverter;
     }
-
 
     @Override
     public BaseResponse get(Long idUser){
@@ -56,10 +57,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public BaseResponse create(CreateUserRequest request) {
+        Optional<User> possibleCopy = repository.findByEmail(request.getEmail());
+
+        if(possibleCopy.isPresent()){
+            throw new RuntimeException("the user exist"); // (RegisterException)
+        }
+
         User user = repository.save(from(request));
         return BaseResponse.builder()
                 .data(from(user))
-                .message("user created with id: " + user.getId())
+                .message("El usuario ha sido creado")
                 .success(true)
                 .httpStatus(HttpStatus.CREATED).build();
     }
@@ -77,12 +84,14 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getUser(String email) {
-        return repository.findByEmail(email).orElseThrow(RuntimeException::new);
+        return repository.findByEmail(email)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
     public User getUser(Long id) {
-        return repository.findById(id).orElseThrow(RuntimeException::new);
+        return repository.findById(id)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
@@ -115,7 +124,7 @@ public class UserServiceImpl implements IUserService {
         user.setLastName(update.getLastName());
         user.setEmail(update.getEmail());
         user.setProfilePicture(update.getProfilePicture());
-        user.setUserType(userTypeConverter.convertToEntityAttribute(update.getUserType()));
+        user.setUserType(typeConverter.convertToEntityAttribute(update.getUserType()));
         return user;
     }
 

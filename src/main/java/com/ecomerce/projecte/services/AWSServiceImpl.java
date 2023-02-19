@@ -7,12 +7,12 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ecomerce.projecte.controllers.dtos.request.UpdateUserRequest;
 import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
 import com.ecomerce.projecte.entities.User;
 import com.ecomerce.projecte.entities.enums.converters.UserTypeConverter;
+import com.ecomerce.projecte.services.interfaces.IAWSService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,30 +26,56 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Service
-public class AWSComponent {
+public class AWSServiceImpl implements IAWSService {
 
     private AmazonS3 s3Client;
 
-    @Value(value = "${AWS_BUCKET.ENDPOINT_URL}")
+    @Value(value = "${aws.endpoint-url}")
     private String endpointUrl;
 
-    @Value(value = "${AWS_BUCKET.BUCKET_NAME}")
+    @Value(value = "${aws.bucket-name}")
     private String bucketName;
 
-    @Value(value = "${AWS_BUCKET.SECRET_KEY}")
+    @Value(value = "${aws.secret-key}")
     private String secretKey;
 
-    @Value(value = "${AWS_BUCKET.ACCESS_KEY}")
+    @Value(value = "${aws.access-key}")
     private String accessKey;
 
     private final UserServiceImpl userService;
     private final UserTypeConverter userTypeConverter;
 
+    public AWSServiceImpl(UserServiceImpl userService,
     @Autowired
-    public AWSComponent(UserServiceImpl userService,
-                        UserTypeConverter userTypeConverter){
+                          UserTypeConverter userTypeConverter){
         this.userService = userService;
         this.userTypeConverter = userTypeConverter;
+    }
+
+    @Override
+    public BaseResponse uploadProfilePicture(MultipartFile multipartFile, Long idUser) {
+
+        User user = userService.getUser(idUser);
+        String awsPath = "persons/users/" + user.getEmail() + "/profile_picture/";
+        String fileUrl;
+
+        try{
+
+            File file = convertMultipartToFile(multipartFile);
+            String finalPath = awsPath + generateFileName(multipartFile);
+            fileUrl = "https://" + bucketName + "." + endpointUrl + "/" + finalPath;
+            uploadFileTos3Bucket(finalPath, file);
+            user.setProfilePicture(fileUrl);
+            userService.update(from(user), user.getId());
+            file.delete();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return BaseResponse.builder()
+                .data(fileUrl)
+                .message("The profile picture was uploaded")
+                .httpStatus(HttpStatus.CREATED)
+                .success(true).build();
     }
 
     @PostConstruct
@@ -81,34 +107,6 @@ public class AWSComponent {
     private void uploadFileTos3Bucket(String fileName, File file) {
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-    }
-
-    public BaseResponse uploadProfilePicture(MultipartFile multipartFile, Long idUser) {
-        User user = userService.getUser(idUser);
-        String awsPath = "persons/users/" + user.getEmail() + "/profile_picture/";
-        String fileUrl;
-
-        try{
-            File file = convertMultipartToFile(multipartFile);
-            String finalPath = awsPath + generateFileName(multipartFile);
-            fileUrl = "https://" + bucketName + "." + endpointUrl + "/" + finalPath;
-            uploadFileTos3Bucket(finalPath, file);
-            user.setProfilePicture(fileUrl);
-            userService.update(from(user), user.getId());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return BaseResponse.builder()
-                .data(fileUrl)
-                .message("The profile picture was uploaded")
-                .httpStatus(HttpStatus.CREATED)
-                .success(true).build();
-    }
-
-    public String deleteFileFromS3Bucket(String fileUrl) {
-        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-        s3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
-        return "SUCCESS";
     }
 
     private UpdateUserRequest from(User user){

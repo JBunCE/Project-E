@@ -2,7 +2,6 @@ package com.ecomerce.projecte.security;
 
 import com.ecomerce.projecte.security.filters.JWTAuthorizationFilter;
 import com.ecomerce.projecte.security.filters.UserAuthenticationFilter;
-import com.ecomerce.projecte.utilities.EnvPropertySourceLoader;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
 @EnableWebSecurity
-@PropertySource(value = "classpath:env.yaml", factory = EnvPropertySourceLoader.class)
+@Configuration
 public class WebSecurityConfig {
 
     private final UserDetailsService userDetailsService;
