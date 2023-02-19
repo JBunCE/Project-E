@@ -1,9 +1,0 @@
-DATABASE:
-  URL: jdbc:mysql://uwuntwo:3306/pe_database
-  USER: root
-  PASSWORD: Conejo##
-AWS:
-  ACCESS_KEY: AKIAQUVISYWUHZ5UZAQ7
-  SECRET_KEY: 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
-  BUCKET_NAME: sl-and-c-bucket
-  BUCKET_URL: s3.us-east-1.amazonaws.com
