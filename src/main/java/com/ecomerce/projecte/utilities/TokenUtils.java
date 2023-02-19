@@ -12,12 +12,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class TokenUtils {
 
     private static final String ACCESS_TOKEN_SECRET_KEY = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Ud";
 
     private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_592_000L;
+
+    private TokenUtils(){}
 
     public static String createToken(String name, String email){
         long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
@@ -34,7 +35,7 @@ public class TokenUtils {
                 .compact();
     }
 
-    public UsernamePasswordAuthenticationToken getAuthentication(String token){
+    public static UsernamePasswordAuthenticationToken getAuthentication(String token){
         try{
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(ACCESS_TOKEN_SECRET_KEY.getBytes())

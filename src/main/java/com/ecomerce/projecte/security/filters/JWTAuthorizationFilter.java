@@ -17,13 +17,6 @@ import java.io.IOException;
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    private final TokenUtils tokenUtils;
-
-    @Autowired
-    public JWTAuthorizationFilter(TokenUtils tokenUtils){
-        this.tokenUtils = tokenUtils;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
@@ -33,7 +26,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
             String token = bearerToken.replace("Bearer ", "");
-            UsernamePasswordAuthenticationToken userNamePAT = tokenUtils.getAuthentication(token);
+            UsernamePasswordAuthenticationToken userNamePAT = TokenUtils.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(userNamePAT);
         }
 

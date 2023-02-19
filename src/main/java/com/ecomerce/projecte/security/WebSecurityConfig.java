@@ -53,6 +53,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            AuthenticationManager authManager) throws Exception{
+
         UserAuthenticationFilter authenticationFilter = new UserAuthenticationFilter();
         authenticationFilter.setAuthenticationManager(authManager);
         authenticationFilter.setFilterProcessesUrl("/login");
