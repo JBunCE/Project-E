@@ -8,12 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("user")
 public class UserController {
 
+    private final IUserService service;
+
     @Autowired
-    private IUserService service;
+    public UserController(IUserService service){
+        this.service = service;
+    }
 
     @GetMapping("/{idUser}")
     public ResponseEntity<BaseResponse> get(@PathVariable Long idUser){
