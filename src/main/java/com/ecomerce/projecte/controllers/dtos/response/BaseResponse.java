@@ -10,7 +10,7 @@ public class BaseResponse {
 
     private Object data;
 
-    private String message;
+    private String message; 
 
     private Boolean success;
 

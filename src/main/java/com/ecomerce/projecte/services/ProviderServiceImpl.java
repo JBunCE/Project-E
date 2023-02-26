@@ -1,6 +1,7 @@
 package com.ecomerce.projecte.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class ProviderServiceImpl implements IProviderService{
         List<GetProviderResponse> responses = repository
         .findAll()
         .stream()
-        .map(this::from).toList();
+        .map(this::from).collect(Collectors.toList());
 return BaseResponse.builder()
         .data(responses)
         .message("find all providers")

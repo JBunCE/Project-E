@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -38,7 +39,7 @@ public class UserServiceImpl implements IUserService {
         List<GetUserResponse> responses = repository
                 .findAll()
                 .stream()
-                .map(this::from).toList();
+                .map(this::from).collect(Collectors.toList());
         return BaseResponse.builder()
                 .data(responses)
                 .message("find all users")

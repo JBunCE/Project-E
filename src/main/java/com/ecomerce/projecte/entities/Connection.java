@@ -20,10 +20,10 @@ public class Connection {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String name; 
 
     @Column(nullable = false)
-    private String urlConnection;
+    private String urlConnection; 
 
     @ManyToOne
     private Provider provider;
