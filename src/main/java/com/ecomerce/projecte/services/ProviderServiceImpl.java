@@ -22,14 +22,18 @@ import com.ecomerce.projecte.services.interfaces.IUserService;
 
 @Service
 public class ProviderServiceImpl implements IProviderService{
-
+    
     @Autowired
     private IProviderRepository repository;
     @Autowired 
     private IUserService userService;
     @Autowired
     private TierTypeConverter converter;
-
+    
+    public Provider findById(Long id){
+        return repository.findById(id)
+        .orElseThrow(() -> new RuntimeException("The provider does not exist"));
+    }
     @Override
     public BaseResponse get(Long idProvider) {
         GetProviderResponse response=from(idProvider);
@@ -43,14 +47,14 @@ public class ProviderServiceImpl implements IProviderService{
     @Override
     public BaseResponse list() {
         List<GetProviderResponse> responses = repository
-        .findAll()
-        .stream()
-        .map(this::from).collect(Collectors.toList());
-return BaseResponse.builder()
-        .data(responses)
-        .message("find all providers")
-        .success(true)
-        .httpStatus(HttpStatus.FOUND).build();
+            .findAll()
+            .stream()
+            .map(this::from).collect(Collectors.toList());
+        return BaseResponse.builder()
+            .data(responses)
+            .message("find all providers")
+            .success(true)
+            .httpStatus(HttpStatus.FOUND).build();
     }
 
     @Override
@@ -63,7 +67,11 @@ return BaseResponse.builder()
             .success(Boolean.TRUE)
             .httpStatus(HttpStatus.OK).build();
     }
-
+    
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);        
+    }
     @Override
     public BaseResponse update(Long idProvider, UpdateProviderRequest request) {
         Provider provider=repository.findById(idProvider)
@@ -86,16 +94,12 @@ return BaseResponse.builder()
     }
 
     
-    @Override
-    public void delete(Long id) {
-        repository.deleteById(id);        
-    }
 
     private Provider from(CreateProviderRequest request){
         Provider provider= new Provider();
         provider.setPhoneNumber(request.getPhoneNumber());
         provider.setTier(TierType.FREE);
-        provider.setUser(userService.getUser(request.getUserEmail()));
+        provider.setUser(userService.getUser(request.getUserId()));
         return provider;
     }
 
@@ -122,9 +126,5 @@ return BaseResponse.builder()
                 .profilePicture(user.getProfilePicture()).build();
     }
 
-    public Provider findById(Long id){
-        return repository.findById(id)
-        .orElseThrow(() -> new RuntimeException("The provider does not exist"));
-    }
     
 }

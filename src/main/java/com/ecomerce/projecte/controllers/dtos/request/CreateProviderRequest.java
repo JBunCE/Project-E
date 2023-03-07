@@ -7,5 +7,5 @@ import lombok.Setter;
 public class CreateProviderRequest {
     private Long phoneNumber;
     private String tier;
-    private String userEmail;
+    private Long userId;
 }
