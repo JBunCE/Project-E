@@ -5,7 +5,11 @@ target/
 !**/src/test/**/target/
 
 ### env ###
+<<<<<<< HEAD
 /src/main/resources/application-dev.properties
+=======
+/src/main/resources/application.yaml
+>>>>>>> origin/main
 
 ### STS ###
 .apt_generated

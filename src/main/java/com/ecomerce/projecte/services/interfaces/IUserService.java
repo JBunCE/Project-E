@@ -5,7 +5,6 @@ import com.ecomerce.projecte.controllers.dtos.request.UpdateUserRequest;
 import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
 import com.ecomerce.projecte.entities.User;
 
-
 public interface IUserService {
 
     BaseResponse get(Long idUser);
@@ -18,8 +17,6 @@ public interface IUserService {
     idUer);
     
     User getUser(String email);
-
     User getUser(Long id);
-    
     void delete(Long id);
 }

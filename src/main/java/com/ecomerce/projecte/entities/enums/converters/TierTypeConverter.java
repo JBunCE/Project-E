@@ -1,4 +1,4 @@
-package com.ecomerce.projecte.entities.enums.converter;
+package com.ecomerce.projecte.entities.enums.converters;
 
 import org.springframework.stereotype.Component;
 

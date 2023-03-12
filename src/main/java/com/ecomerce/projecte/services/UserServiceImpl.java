@@ -7,6 +7,7 @@ import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
 import com.ecomerce.projecte.controllers.dtos.response.GetUserResponse;
 import com.ecomerce.projecte.entities.User;
 import com.ecomerce.projecte.entities.enums.UserType;
+import com.ecomerce.projecte.entities.enums.converters.UserTypeConverter;
 import com.ecomerce.projecte.repositories.IUserRepository;
 import com.ecomerce.projecte.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
+    private final IUserRepository repository;
+    private final UserTypeConverter typeConverter;
+
     @Autowired
-    private IUserRepository repository;
+    public UserServiceImpl(IUserRepository repository,
+                           UserTypeConverter typeConverter) {
+        this.repository = repository;
+        this.typeConverter = typeConverter;
+    }
 
     @Override
     public BaseResponse get(Long idUser){
@@ -49,10 +58,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public BaseResponse create(CreateUserRequest request) {
+        Optional<User> possibleCopy = repository.findByEmail(request.getEmail());
+
+        if(possibleCopy.isPresent()){
+            throw new RuntimeException("the user exist"); // (RegisterException)
+        }
+
         User user = repository.save(from(request));
         return BaseResponse.builder()
                 .data(from(user))
-                .message("user created with id: " + user.getId())
+                .message("El usuario ha sido creado")
                 .success(true)
                 .httpStatus(HttpStatus.CREATED).build();
     }
@@ -70,8 +85,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getUser(String email) {
-        return repository.findByEmail(email).orElseThrow(RuntimeException::new);
+        return repository.findByEmail(email)
+                .orElseThrow(RuntimeException::new);
     }
+
+    @Override
+    public User getUser(Long id) {
+        return repository.findById(id)
+                .orElseThrow(RuntimeException::new);
+    }
+
+
+
 
     @Override
     public void delete(Long id) {
@@ -102,13 +127,9 @@ public class UserServiceImpl implements IUserService {
         user.setName(update.getName());
         user.setLastName(update.getLastName());
         user.setEmail(update.getEmail());
+        user.setProfilePicture(update.getProfilePicture());
+        user.setUserType(typeConverter.convertToEntityAttribute(update.getUserType()));
         return user;
-    }
-
-    @Override
-    public User getUser(Long id) {
-        return repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("The user does not exist"));
     }
 
 }

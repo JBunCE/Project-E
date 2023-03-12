@@ -15,7 +15,7 @@ import com.ecomerce.projecte.controllers.dtos.response.GetUserResponse;
 import com.ecomerce.projecte.entities.Provider;
 import com.ecomerce.projecte.entities.User;
 import com.ecomerce.projecte.entities.enums.TierType;
-import com.ecomerce.projecte.entities.enums.converter.TierTypeConverter;
+import com.ecomerce.projecte.entities.enums.converters.TierTypeConverter;
 import com.ecomerce.projecte.repositories.IProviderRepository;
 import com.ecomerce.projecte.services.interfaces.IProviderService;
 import com.ecomerce.projecte.services.interfaces.IUserService;

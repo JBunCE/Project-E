@@ -33,6 +33,7 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
         return getAuthenticationManager().authenticate(userNamePAT);
     }
 
+    @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,

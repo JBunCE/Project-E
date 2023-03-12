@@ -1,4 +1,4 @@
-package com.ecomerce.projecte.entities.enums.converter;
+package com.ecomerce.projecte.entities.enums.converters;
 
 import com.ecomerce.projecte.entities.enums.ColorType;
 import jakarta.persistence.AttributeConverter;
