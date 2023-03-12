@@ -47,7 +47,7 @@ public class AWSServiceImpl implements IAWSService {
 
     public AWSServiceImpl(UserServiceImpl userService,
     @Autowired
-                          UserTypeConverter userTypeConverter){
+    UserTypeConverter userTypeConverter){
         this.userService = userService;
         this.userTypeConverter = userTypeConverter;
     }

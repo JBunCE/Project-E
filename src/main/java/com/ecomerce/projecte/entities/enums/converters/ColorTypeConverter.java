@@ -1,9 +1,8 @@
-package com.ecomerce.projecte.entities.enums.converter;
+package com.ecomerce.projecte.entities.enums.converters;
 
 import com.ecomerce.projecte.entities.enums.ColorType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.hibernate.usertype.UserType;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
@@ -17,7 +16,6 @@ public class ColorTypeConverter implements AttributeConverter<ColorType, String>
         if(colorType == null) return null;
         return colorType.getColorType();
     }
-    //ColorType -> String
 
 
     @Override
@@ -27,5 +25,4 @@ public class ColorTypeConverter implements AttributeConverter<ColorType, String>
                 .filter(t -> t.getColorType().equals(type))
                 .findFirst().orElseThrow(RuntimeException::new);
     }
-    //String -> ColorType
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -47,7 +48,7 @@ public class UserServiceImpl implements IUserService {
         List<GetUserResponse> responses = repository
                 .findAll()
                 .stream()
-                .map(this::from).toList();
+                .map(this::from).collect(Collectors.toList());
         return BaseResponse.builder()
                 .data(responses)
                 .message("find all users")
@@ -94,6 +95,9 @@ public class UserServiceImpl implements IUserService {
                 .orElseThrow(RuntimeException::new);
     }
 
+
+
+
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
@@ -105,7 +109,7 @@ public class UserServiceImpl implements IUserService {
                 .name(user.getName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .profilePicture(user.getProfilePicture()).build();
+            .profilePicture(user.getProfilePicture()).build();
     }
 
     private User from(CreateUserRequest request){

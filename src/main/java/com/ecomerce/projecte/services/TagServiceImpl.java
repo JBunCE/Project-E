@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ecomerce.projecte.entities.enums.ColorType;
-import com.ecomerce.projecte.entities.enums.converter.ColorTypeConverter;
+import com.ecomerce.projecte.entities.enums.converters.ColorTypeConverter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
