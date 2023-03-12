@@ -51,45 +51,46 @@ public class ConnectionServiceImpl implements IConnectionService {
             .httpStatus(HttpStatus.OK).build();
     }
 
-    private Connection update(Connection connection, UpdateConnectionRequest request){
-        connection.setName(request.getName());
-        connection.setUrlConnection(request.getUrlConnection());
-        return connection;
-    }
-
+    
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
         
     }
-
+    
     @Override
     public BaseResponse list() {
         List<GetConnectionResponse> responses = repository
         .findAll()
         .stream()
         .map(this::from).collect(Collectors.toList());
-return BaseResponse.builder()
+        return BaseResponse.builder()
         .data(responses)
         .message("find all connections")
         .success(true)
         .httpStatus(HttpStatus.FOUND).build();
     }
-
+    
     @Override
     public BaseResponse get(Long id) {
         GetConnectionResponse response= from(id);
         return BaseResponse.builder()
-            .data(response)
-            .message("Connection has been found")
-            .success(Boolean.TRUE)
-            .httpStatus(HttpStatus.OK).build();
+        .data(response)
+        .message("Connection has been found")
+        .success(Boolean.TRUE)
+        .httpStatus(HttpStatus.OK).build();
     }
-
+    
+    
+    private Connection update(Connection connection, UpdateConnectionRequest request){
+        connection.setName(request.getName());
+        connection.setUrlConnection(request.getUrlConnection());
+        return connection;
+    }
     private GetConnectionResponse from(Long id){
         return repository.findById(id)
-            .map(this::from)
-            .orElseThrow(() -> new RuntimeException("The Connection does not exist"));
+        .map(this::from)
+        .orElseThrow(() -> new RuntimeException("The Connection does not exist"));
     }
 
     private GetConnectionResponse from(Connection connection){
@@ -124,5 +125,6 @@ return BaseResponse.builder()
         connection.setProvider(providerService.findById(request.getIdProvider()));
         return connection;
     }
+
     
 }

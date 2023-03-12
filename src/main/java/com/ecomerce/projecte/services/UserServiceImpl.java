@@ -84,7 +84,7 @@ public class UserServiceImpl implements IUserService {
                 .name(user.getName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .profilePicture(user.getProfilePicture()).build();
+            .profilePicture(user.getProfilePicture()).build();
     }
 
     private User from(CreateUserRequest request){

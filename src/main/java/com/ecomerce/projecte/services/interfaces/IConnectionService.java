@@ -1,9 +1,10 @@
 package com.ecomerce.projecte.services.interfaces;
 
+
 import com.ecomerce.projecte.controllers.dtos.request.CreateConnectionRequest;
 import com.ecomerce.projecte.controllers.dtos.request.UpdateConnectionRequest;
 import com.ecomerce.projecte.controllers.dtos.response.BaseResponse;
-import com.ecomerce.projecte.entities.Connection;
+
 
 public interface IConnectionService {
     BaseResponse create(CreateConnectionRequest request);
@@ -15,5 +16,7 @@ public interface IConnectionService {
     BaseResponse list();
 
     BaseResponse get(Long id);
+
+    
 
 }

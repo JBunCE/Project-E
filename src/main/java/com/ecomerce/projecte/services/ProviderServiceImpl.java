@@ -114,7 +114,8 @@ public class ProviderServiceImpl implements IProviderService{
             .id(provider.getId())
             .numberPhone(provider.getPhoneNumber())
             .tier(provider.getTier().getTierCode())
-            .user(from(provider.getUser())).build();
+            .user(from(provider.getUser()))
+            .build();
     }
 
     private GetUserResponse from(User user){
